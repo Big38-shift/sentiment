@@ -15,6 +15,22 @@ nltk.download('averaged_perceptron_tagger')
 model = joblib.load("logistic_model.pkl")
 vectorizer = joblib.load("tfidf_vectorizer.pkl")
 le = joblib.load("label_encoder.pkl")
+import nltk
+
+# Make sure all necessary NLTK resources are present
+def download_nltk_resources():
+    resources = [
+        ("corpora/stopwords", "stopwords"),
+        ("corpora/wordnet", "wordnet"),
+        ("taggers/averaged_perceptron_tagger", "averaged_perceptron_tagger")
+    ]
+    for path, name in resources:
+        try:
+            nltk.data.find(path)
+        except LookupError:
+            nltk.download(name)
+
+download_nltk_resources()
 
 # Function to convert NLTK POS tags to WordNet POS tags
 def get_wordnet_pos(pos_tag):
