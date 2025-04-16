@@ -16,7 +16,7 @@ model = joblib.load("logistic_model.pkl")
 vectorizer = joblib.load("tfidf_vectorizer.pkl")
 le = joblib.load("label_encoder.pkl")
 
-# Text preprocessing
+# Function to convert NLTK POS tags to WordNet POS tags
 def get_wordnet_pos(pos_tag):
     if pos_tag.startswith('J'):
         return wordnet.ADJ
@@ -29,6 +29,7 @@ def get_wordnet_pos(pos_tag):
     else:
         return wordnet.NOUN
 
+# Text preprocessing function
 def clean_text(text):
     text = text.lower()
     tokens = [word.strip(string.punctuation) for word in text.split()]
@@ -36,13 +37,13 @@ def clean_text(text):
     stop = stopwords.words('english')
     tokens = [w for w in tokens if w not in stop]
     tokens = [w for w in tokens if len(w) > 1]
-    tagged = pos_tag(tokens)
+    tagged = pos_tag(tokens, lang='eng')  # Fix: specify language
     lemmatizer = WordNetLemmatizer()
     tokens = [lemmatizer.lemmatize(word, get_wordnet_pos(tag)) for word, tag in tagged]
     return " ".join(tokens)
 
 # Streamlit UI
-st.title("Hotel Review Sentiment Analysis")
+st.title("🏨 Hotel Review Sentiment Analysis")
 st.write("Enter a hotel review and get its predicted sentiment!")
 
 review = st.text_area("Enter your review here:")
@@ -56,4 +57,3 @@ if st.button("Predict Sentiment"):
         prediction = model.predict(vectorized)
         sentiment = le.inverse_transform(prediction)[0]
         st.success(f"Predicted Sentiment: **{sentiment.capitalize()}**")
-# git
