@@ -37,7 +37,7 @@ def clean_text(text):
     stop = stopwords.words('english')
     tokens = [w for w in tokens if w not in stop]
     tokens = [w for w in tokens if len(w) > 1]
-    tagged = pos_tag(tokens, lang='eng')  # Fix: specify language
+    tagged = pos_tag(tokens)  # Fix: specify language
     lemmatizer = WordNetLemmatizer()
     tokens = [lemmatizer.lemmatize(word, get_wordnet_pos(tag)) for word, tag in tagged]
     return " ".join(tokens)
